@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Generador de Códigos QR - Ubicaciones</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .selectors-container {
+            display: flex;
+            gap: 20px;
+            margin: 20px 0;
+            align-items: center;
+            justify-content: center;
+        }
+        select {
+            padding: 8px;
+            font-size: 16px;
+        }
+        #qrcode {
+            margin: 20px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        h2 {
+            text-align: center;
+        }
+        /* Centrar la imagen del QR dentro del contenedor */
+        #qrcode img {
+            margin: 0 auto;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <h2>Ubicaciones</h2>
+    
+    <div class="selectors-container">
+        <select id="firstSelect">
+            <script>
+                const select1 = document.getElementById('firstSelect');
+                for (let i = 65; i <= 90; i++) { // A-Z
+                    const letter = String.fromCharCode(i);
+                    const option = document.createElement('option');
+                    option.value = `${letter}00`;
+                    option.text = `${letter}00`;
+                    select1.appendChild(option);
+                }
+            </script>
+        </select>
+
+        <select id="secondSelect">
+            <script>
+                const select2 = document.getElementById('secondSelect');
+                for (let i = 1; i <= 30; i++) {
+                    const option = document.createElement('option');
+                    const value = i.toString().padStart(2, '0');
+                    option.value = value;
+                    option.text = value;
+                    select2.appendChild(option);
+                }
+            </script>
+        </select>
+
+        <select id="thirdSelect">
+            <script>
+                const select3 = document.getElementById('thirdSelect');
+                for (let i = 1; i <= 15; i++) {
+                    const option = document.createElement('option');
+                    const value = i.toString().padStart(3, '0');
+                    option.value = value;
+                    option.text = value;
+                    select3.appendChild(option);
+                }
+            </script>
+        </select>
+    </div>
+
+    <div id="qrcode"></div>
+
+    <script>
+        let qr = null;
+        
+        function generateQR() {
+            const value1 = document.getElementById('firstSelect').value;
+            const value2 = document.getElementById('secondSelect').value;
+            const value3 = document.getElementById('thirdSelect').value;
+            
+            const combinedValue = `${value1}-${value2}-${value3}`;
+            
+            // Limpiar QR anterior si existe
+            if (qr) {
+                qr.clear();
+                document.getElementById('qrcode').innerHTML = '';
+            }
+            
+            // Generar nuevo QR
+            qr = new QRCode(document.getElementById('qrcode'), {
+                text: combinedValue,
+                width: 256,
+                height: 256
+            });
+        }
+
+        // Añadir event listeners a los selectores
+        document.getElementById('firstSelect').addEventListener('change', generateQR);
+        document.getElementById('secondSelect').addEventListener('change', generateQR);
+        document.getElementById('thirdSelect').addEventListener('change', generateQR);
+
+        // Generar QR inicial
+        generateQR();
+    </script>
+</body>
+</html>
